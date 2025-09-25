@@ -15,15 +15,15 @@
     </header>
 
     <section class="card">
-      <h2 style="margin-top:0">Добавить пост с файлом</h2>
+      <h2 style="margin-top:0">Добавить пост с файлами</h2>
       <form id="addForm">
         <div>
           <label>Название</label>
           <input id="title" type="text" placeholder="Название игры или файла" required />
           <label style="margin-top:8px">Описание</label>
           <textarea id="desc" placeholder="Короткое описание (опционально)"></textarea>
-          <label style="margin-top:8px">Файл</label>
-          <input id="file" type="file" />
+          <label style="margin-top:8px">Файлы</label>
+          <input id="file" type="file" multiple />
         </div>
         <div class="controls">
           <button id="saveBtn" type="submit">Добавить пост</button>
@@ -49,3 +49,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
