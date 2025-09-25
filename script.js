@@ -1,107 +1,80 @@
-// script.js
-let db;
-const request = indexedDB.open("gamePostsDB", 1);
-
-request.onupgradeneeded = e => {
-  db = e.target.result;
-  db.createObjectStore("posts", { keyPath: "id", autoIncrement: true });
-};
-
-request.onsuccess = e => {
-  db = e.target.result;
-  loadPosts();
-  const params = new URLSearchParams(location.search);
-  if (params.has("payload")) {
-    addPostFromCode(params.get("payload"));
-  }
-};
-
-const postsDiv = document.getElementById("posts");
-const form = document.getElementById("addForm");
-const titleEl = document.getElementById("title");
-const descEl = document.getElementById("desc");
-const fileEl = document.getElementById("file");
-const codeBox = document.getElementById("generatedCode");
-const clearBtn = document.getElementById("clearBtn");
-
-form.addEventListener("submit", async e => {
-  e.preventDefault();
-  let fileData = null;
-  if (fileEl.files.length) {
-    fileData = await toBase64(fileEl.files[0]);
-  }
-  const post = {
-    title: titleEl.value,
-    desc: descEl.value,
-    file: fileData,
-    fileName: fileEl.files[0]?.name || null,
-    date: new Date().toLocaleString()
-  };
-  savePost(post);
-  titleEl.value = "";
-  descEl.value = "";
-  fileEl.value = "";
-});
-
-clearBtn.onclick = () => {
-  if (confirm("Удалить все посты?")) {
-    const tx = db.transaction("posts", "readwrite");
-    tx.objectStore("posts").clear();
-    postsDiv.innerHTML = "";
-  }
-};
-
-function savePost(post) {
-  const tx = db.transaction("posts", "readwrite");
-  tx.objectStore("posts").add(post);
-  tx.oncomplete = () => {
-    renderPost(post);
-    generateCode(post);
-  };
+/* style.css */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background: #f5f5f5;
+  color: #333;
 }
 
-function loadPosts() {
-  const tx = db.transaction("posts", "readonly");
-  const store = tx.objectStore("posts");
-  store.getAll().onsuccess = e => {
-    postsDiv.innerHTML = "";
-    e.target.result.forEach(renderPost);
-  };
+.wrap {
+  max-width: 800px;
+  margin: auto;
+  padding: 16px;
 }
 
-function renderPost(post) {
-  const div = document.createElement("div");
-  div.className = "post";
-  div.innerHTML = `
-    <h3>${post.title}</h3>
-    <div class="muted small">${post.date}</div>
-    <p>${post.desc || ""}</p>
-    ${post.file ? `<a download="${post.fileName}" href="${post.file}">Скачать файл</a>` : ""}
-  `;
-  postsDiv.prepend(div);
+header {
+  margin-bottom: 24px;
 }
 
-function generateCode(post) {
-  const code = btoa(JSON.stringify(post));
-  codeBox.textContent = code;
+.card {
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,.1);
+  margin-bottom: 24px;
 }
 
-async function toBase64(file) {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
+.controls {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-function addPostFromCode(code) {
-  try {
-    const post = JSON.parse(atob(code));
-    savePost(post);
-  } catch {
-    alert("Неверный код поста");
-  }
+button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #1976d2;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+button:hover { background: #1259a5; }
+
+input, textarea {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-window.addPostFromCode = addPostFromCode;
+.posts .post {
+  background: #fff;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.1);
+  margin-bottom: 12px;
+}
+
+.posts .post h3 {
+  margin-top: 0;
+}
+
+.codebox {
+  background: #eee;
+  padding: 8px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 13px;
+  overflow-x: auto;
+}
+
+.muted {
+  color: #777;
+}
+
+.small {
+  font-size: 13px;
+}
