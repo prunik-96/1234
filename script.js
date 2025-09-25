@@ -111,4 +111,11 @@ function addPostFromCode(code) {
   }
 }
 
+fileEl.addEventListener("change", () => {
+  const fileName = fileEl.files.length
+    ? Array.from(fileEl.files).map(f => f.name).join(", ")
+    : "Файлы не выбраны";
+  document.getElementById("fileName").textContent = fileName;
+});
+
 window.addPostFromCode = addPostFromCode;
