@@ -126,3 +126,23 @@ textarea {
 .small {
   font-size: 13px;
 }
+
+input[type="file"] {
+  display: none; /* прячем стандартную кнопку */
+}
+
+.file-label {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #ffcc00, #ff8800);
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.file-label:hover {
+  background: linear-gradient(90deg, #ffdd44, #ffaa33);
+  box-shadow: 0 0 10px #ffcc00aa;
+}
