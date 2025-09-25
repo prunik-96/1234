@@ -1,0 +1,51 @@
+// index.html
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Простой сайт для скачки игр — демо</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Простой сайт для скачки игр — демо</h1>
+      <div class="muted small">Локальное хранилище (IndexedDB) — данные сохраняются в браузере</div>
+    </header>
+
+    <section class="card">
+      <h2 style="margin-top:0">Добавить пост с файлом</h2>
+      <form id="addForm">
+        <div>
+          <label>Название</label>
+          <input id="title" type="text" placeholder="Название игры или файла" required />
+          <label style="margin-top:8px">Описание</label>
+          <textarea id="desc" placeholder="Короткое описание (опционально)"></textarea>
+          <label style="margin-top:8px">Файл</label>
+          <input id="file" type="file" />
+        </div>
+        <div class="controls">
+          <button id="saveBtn" type="submit">Добавить пост</button>
+          <button id="clearBtn" type="button">Очистить все</button>
+          <div class="muted small">После перезагрузки посты сохранятся.</div>
+        </div>
+      </form>
+
+      <div style="margin-top:12px">
+        <label>Код/ссылка для автоматического добавления поста</label>
+        <div class="codebox" id="generatedCode">Сначала создайте пост → затем здесь появится код для репоста</div>
+        <div class="muted small" style="margin-top:8px">Инструкция: вызовите функцию <code>addPostFromCode(code)</code> в консоли страницы — она добавит пост.</div>
+      </div>
+    </section>
+
+    <section class="posts" id="posts"></section>
+
+    <footer>
+      <div class="muted">Это локальная демонстрация — для реального сайта нужен backend (Node/Express, PHP и т.д.) чтобы хранить файлы на сервере и делиться ссылками публично.</div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
