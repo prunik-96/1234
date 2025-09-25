@@ -1,80 +1,114 @@
-/* style.css */
-body {
-  font-family: sans-serif;
-  margin: 0;
-  background: #f5f5f5;
-  color: #333;
+// script.js
+let db;
+const request = indexedDB.open("gamePostsDB", 2);
+
+request.onupgradeneeded = e => {
+  db = e.target.result;
+  if (!db.objectStoreNames.contains("posts")) {
+    db.createObjectStore("posts", { keyPath: "id", autoIncrement: true });
+  }
+};
+
+request.onsuccess = e => {
+  db = e.target.result;
+  loadPosts();
+  const params = new URLSearchParams(location.search);
+  if (params.has("payload")) {
+    addPostFromCode(params.get("payload"));
+  }
+};
+
+const postsDiv = document.getElementById("posts");
+const form = document.getElementById("addForm");
+const titleEl = document.getElementById("title");
+const descEl = document.getElementById("desc");
+const fileEl = document.getElementById("file");
+const codeBox = document.getElementById("generatedCode");
+const clearBtn = document.getElementById("clearBtn");
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  let files = [];
+  if (fileEl.files.length) {
+    for (const f of fileEl.files) {
+      files.push({
+        data: await toBase64(f),
+        name: f.name
+      });
+    }
+  }
+  const post = {
+    title: titleEl.value,
+    desc: descEl.value,
+    files,
+    date: new Date().toLocaleString()
+  };
+  savePost(post);
+  titleEl.value = "";
+  descEl.value = "";
+  fileEl.value = "";
+});
+
+clearBtn.onclick = () => {
+  if (confirm("Удалить все посты?")) {
+    const tx = db.transaction("posts", "readwrite");
+    tx.objectStore("posts").clear();
+    postsDiv.innerHTML = "";
+  }
+};
+
+function savePost(post) {
+  const tx = db.transaction("posts", "readwrite");
+  tx.objectStore("posts").add(post);
+  tx.oncomplete = () => {
+    renderPost(post);
+    generateCode(post);
+  };
 }
 
-.wrap {
-  max-width: 800px;
-  margin: auto;
-  padding: 16px;
+function loadPosts() {
+  const tx = db.transaction("posts", "readonly");
+  const store = tx.objectStore("posts");
+  store.getAll().onsuccess = e => {
+    postsDiv.innerHTML = "";
+    e.target.result.forEach(renderPost);
+  };
 }
 
-header {
-  margin-bottom: 24px;
+function renderPost(post) {
+  const div = document.createElement("div");
+  div.className = "post";
+  const filesHTML = post.files && post.files.length ? post.files.map(f => `<div><a download="${f.name}" href="${f.data}">Скачать ${f.name}</a></div>`).join("") : "";
+  div.innerHTML = `
+    <h3>${post.title}</h3>
+    <div class="muted small">${post.date}</div>
+    <p>${post.desc || ""}</p>
+    ${filesHTML}
+  `;
+  postsDiv.prepend(div);
 }
 
-.card {
-  background: #fff;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,.1);
-  margin-bottom: 24px;
+function generateCode(post) {
+  const code = btoa(JSON.stringify(post));
+  codeBox.textContent = code;
 }
 
-.controls {
-  margin-top: 12px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+async function toBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
 }
 
-button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  background: #1976d2;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-button:hover { background: #1259a5; }
-
-input, textarea {
-  width: 100%;
-  padding: 6px;
-  margin-top: 4px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+function addPostFromCode(code) {
+  try {
+    const post = JSON.parse(atob(code));
+    savePost(post);
+  } catch {
+    alert("Неверный код поста");
+  }
 }
 
-.posts .post {
-  background: #fff;
-  padding: 12px;
-  border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,.1);
-  margin-bottom: 12px;
-}
-
-.posts .post h3 {
-  margin-top: 0;
-}
-
-.codebox {
-  background: #eee;
-  padding: 8px;
-  border-radius: 6px;
-  font-family: monospace;
-  font-size: 13px;
-  overflow-x: auto;
-}
-
-.muted {
-  color: #777;
-}
-
-.small {
-  font-size: 13px;
-}
+window.addPostFromCode = addPostFromCode;
