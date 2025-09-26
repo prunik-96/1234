@@ -25,7 +25,7 @@
           
           <label style="margin-top:8px">Файлы</label>
           <!-- кастомная кнопка -->
-          <label for="file" class="file-label">Выбрать файлы</label>
+          <label for="file" class="file-label">📂 Выбрать файлы</label>
           <input id="file" type="file" multiple hidden />
           <span id="fileName" class="muted small">Файлы не выбраны</span>
         </div>
@@ -40,20 +40,22 @@
       <div style="margin-top:12px">
         <label>Код/ссылка</label>
         <div class="codebox" id="generatedCode">Сначала создайте пост</div>
-        <div class="muted small" style="margin-top:8px">Инструкция: вызовите функцию <code>addPostFromCode(code)</code> в консоли страницы — она добавит пост.</div>
+        <div class="muted small" style="margin-top:8px">
+          Инструкция: вызовите функцию <code>addPostFromCode(code)</code> в консоли страницы — она добавит пост.
+        </div>
       </div>
     </section>
 
     <section class="posts" id="posts"></section>
 
     <footer>
-      <div class="muted">Это локальная демонстрация — для реального сайта нужен backend (Node/Express, PHP и т.д.), чтобы хранить файлы на сервере и делиться ссылками публично.</div>
+      <div class="muted">
+        Это локальная демонстрация — для реального сайта нужен backend (Node/Express, PHP и т.д.), 
+        чтобы хранить файлы на сервере и делиться ссылками публично.
+      </div>
     </footer>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-
-</html>
-
