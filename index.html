@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ru">
 <head>
@@ -20,13 +19,17 @@
         <div>
           <label>Название</label>
           <input id="title" type="text" placeholder="Название игры или файла" required />
+          
           <label style="margin-top:8px">Описание</label>
           <textarea id="desc" placeholder="Короткое описание (опционально)"></textarea>
+          
           <label style="margin-top:8px">Файлы</label>
+          <!-- кастомная кнопка -->
           <label for="file" class="file-label">Выбрать файлы</label>
-          <input id="file" type="file" multiple />
+          <input id="file" type="file" multiple hidden />
           <span id="fileName" class="muted small">Файлы не выбраны</span>
         </div>
+        
         <div class="controls">
           <button id="saveBtn" type="submit">Добавить пост</button>
           <button id="clearBtn" type="button">Очистить все</button>
@@ -44,17 +47,13 @@
     <section class="posts" id="posts"></section>
 
     <footer>
-      <div class="muted">Это локальная демонстрация — для реального сайта нужен backend (Node/Express, PHP и т.д.) чтобы хранить файлы на сервере и делиться ссылками публично.</div>
+      <div class="muted">Это локальная демонстрация — для реального сайта нужен backend (Node/Express, PHP и т.д.), чтобы хранить файлы на сервере и делиться ссылками публично.</div>
     </footer>
   </div>
 
-  <form action="upload.php" method="post" enctype="multipart/form-data">
-    <label for="file">Загрузить файл:</label>
-    <input type="file" name="file" id="file">
-    <button type="submit">Загрузить</button>
-</form>
-  
   <script src="script.js"></script>
 </body>
+</html>
+
 </html>
 
