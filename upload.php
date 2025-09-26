@@ -1,8 +1,8 @@
 <?php
 // ==== НАСТРОЙКИ ====
-$token = "ТВОЙ_GITHUB_TOKEN";   // сюда вставь токен
-$repoOwner = "ТВОЙ_USERNAME";   // имя профиля GitHub
-$repoName = "my-files-repo";    // имя репозитория
+$token = "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";   // сюда вставь токен
+$repoOwner = "prunik-96";   // имя профиля GitHub
+$repoName = "public_repo";    // имя репозитория
 $tag = "v1.0";                  // тег релиза (можно всегда один)
 
 // ==== ПОЛУЧАЕМ ФАЙЛ ====
